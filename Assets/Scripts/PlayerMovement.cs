@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class SimplePlayerMovement : MonoBehaviour, IDamageable
 {
@@ -89,13 +90,15 @@ public class SimplePlayerMovement : MonoBehaviour, IDamageable
         // Freeze the soldier in place
         if (rb != null) rb.linearVelocity = Vector2.zero;
 
-        Debug.Log("Player has been defeated!");
+        Debug.Log("Player has been defeated! Loading Game Over screen...");
+        StartCoroutine(LoadGameOverScreen());
+    }
 
-        // Trigger the Game Over screen after the death animation plays
-        if (GameOverManager.Instance != null)
-        {
-            GameOverManager.Instance.ShowGameOver();
-        }
+    IEnumerator LoadGameOverScreen()
+    {
+        // Wait for the death animation to play
+        yield return new WaitForSeconds(1.4f);
+        SceneManager.LoadScene("GameOver");
     }
 
     void Update()

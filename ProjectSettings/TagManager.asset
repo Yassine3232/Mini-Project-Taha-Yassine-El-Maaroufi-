@@ -1,0 +1,67 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!78 &1
+TagManager:
+  serializedVersion: 3
+  tags:
+  - Enemy
+  layers:
+  - Default
+  - TransparentFX
+  - Ignore Raycast
+  - Player
+  - Water
+  - UI
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  m_SortingLayers:
+  - name: Default
+    uniqueID: 0
+    locked: 0
+  - name: Sky
+    uniqueID: 969759819
+    locked: 0
+  - name: Decoration
+    uniqueID: 4031533595
+    locked: 0
+  - name: Ground
+    uniqueID: 871997445
+    locked: 0
+  - name: Crater
+    uniqueID: 1162919235
+    locked: 0
+  - name: Player
+    uniqueID: 3227079869
+    locked: 0
+  - name: Enemies
+    uniqueID: 1389512403
+    locked: 0
+  - name: Attack
+    uniqueID: 1160071803
+    locked: 0
+  m_RenderingLayers:
+  - Default

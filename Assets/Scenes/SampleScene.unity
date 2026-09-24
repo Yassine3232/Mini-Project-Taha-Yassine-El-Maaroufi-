@@ -512,8 +512,8 @@ MonoBehaviour:
   playerLayer:
     serializedVersion: 2
     m_Bits: 8
-  attackRange: 1.8
-  verticalTolerance: 2
+  attackRange: 0.8
+  verticalTolerance: 1.2
   chaseSpeed: 3
   attackCooldown: 0.8
   attackDamage: 10
@@ -1052,7 +1052,7 @@ GameObject:
   - component: {fileID: 1254870026}
   m_Layer: 3
   m_Name: Soldier
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1555,9 +1555,191 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  gameSceneName: SampleScene
+--- !u!1 &7700000010
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7700000011}
+  - component: {fileID: 7700000012}
+  m_Layer: 0
+  m_Name: ZombieManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7700000011
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7700000010}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7700000012
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7700000010}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2c3d4e5f6a70819203a4b5c6d7e8f91, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  killsToWin: 10
+  zombieTypes:
+  - name: ZombieWoman
+    sprite: {fileID: 4723107735738678597, guid: 1eb7e9d68b50bc4459fa14c02d9f9711, type: 3}
+    controller: {fileID: 9100000, guid: 40933b779db659d45b133d7cd623766f, type: 2}
+    yPosition: -2.3
+  - name: ZombieMan
+    sprite: {fileID: 4723107735738678597, guid: 19232d5ce10584d41948611459b9def4, type: 3}
+    controller: {fileID: 9100000, guid: 621932babd27f811940777ff997f17c5, type: 2}
+    yPosition: -2.3
+  - name: WildZombie
+    sprite: {fileID: 4723107735738678597, guid: 26442807dff1cc4429e9bbb561972afc, type: 3}
+    controller: {fileID: 9100000, guid: be1d6a8205eae75eaee2e4319b7fdfd3, type: 2}
+    yPosition: -2.3
+  minSpawnInterval: 1.5
+  maxSpawnInterval: 3.5
+  maxAliveZombies: 5
+  spawnMinX: -26
+  spawnMaxX: 7
+  spawnY: -2.3
+  minSpawnDistanceFromPlayer: 5
+  zombieDetectionRange: 5
+  zombieScale: 2
+  zombieHealth: 3
+  zombieDamage: 10
+  zombieChaseSpeed: 3
+--- !u!1 &7700000020
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7700000021}
+  - component: {fileID: 7700000022}
+  m_Layer: 0
+  m_Name: ParallaxManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7700000021
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7700000020}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7700000022
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7700000020}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4a3b2c1d0f98e7d6c5b4a392817065f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameSceneName: SampleScene
+  targetCamera: {fileID: 519420031}
+  layer1:
+    name: Layer 1 (Far Background)
+    layerTransform: {fileID: 1376609790}
+    speed: 0.85
+  layer2:
+    name: Layer 2 (Midground)
+    layerTransform: {fileID: 810667643}
+    speed: 0.5
+  layer3:
+    name: Layer 3 (Foreground Details)
+    layerTransform: {fileID: 485302875}
+    speed: 0.2
+  enableVerticalParallax: 0
+  verticalMultiplier: 0.3
+  showOnScreenSliders: 1
+--- !u!1 &7700000030
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7700000031}
+  - component: {fileID: 7700000032}
+  m_Layer: 0
+  m_Name: DustyFilter
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7700000031
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7700000030}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7700000032
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7700000030}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c4d5e6f7a8b90123456789abcdef0123, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  filterEnabled: 1
+  tintStrength: 0.16
+  tintColor: {r: 0.88, g: 0.72, b: 0.48, a: 1}
+  vignetteStrength: 0.55
+  vignetteSoftness: 0.55
+  grainStrength: 0.12
+  animateGrain: 1
+  grainSpeed: 1.2
+  dustMotesStrength: 0.5
+  dustMoteCount: 14
+  showOnScreenControls: 1
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -1574,4 +1756,7 @@ SceneRoots:
   - {fileID: 155252626}
   - {fileID: 735160286}
   - {fileID: 7700000002}
+  - {fileID: 7700000011}
+  - {fileID: 7700000021}
+  - {fileID: 7700000031}
 

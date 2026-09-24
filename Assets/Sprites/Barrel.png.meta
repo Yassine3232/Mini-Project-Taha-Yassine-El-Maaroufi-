@@ -1,0 +1,463 @@
+fileFormatVersion: 2
+guid: 4bddb7b693e0baa4b8c3e73a0ed41352
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -9055870250442385425
+    second: Gemini_Generated_Image_dkkpi6dkkpi6dkkp__1_-removebg-preview_0
+  - first:
+      213: -1511995034058534799
+    second: Gemini_Generated_Image_dkkpi6dkkpi6dkkp__1_-removebg-preview_1
+  - first:
+      213: 7000837187893872387
+    second: Gemini_Generated_Image_dkkpi6dkkpi6dkkp__1_-removebg-preview_2
+  - first:
+      213: -3635565361984268834
+    second: Gemini_Generated_Image_dkkpi6dkkpi6dkkp__1_-removebg-preview_3
+  - first:
+      213: 9043895938023693017
+    second: Gemini_Generated_Image_dkkpi6dkkpi6dkkp__1_-removebg-preview_4
+  - first:
+      213: -8082926777062048265
+    second: Gemini_Generated_Image_dkkpi6dkkpi6dkkp__1_-removebg-preview_5
+  - first:
+      213: -3945011835874695518
+    second: Gemini_Generated_Image_dkkpi6dkkpi6dkkp__1_-removebg-preview_6
+  - first:
+      213: 3746438214411606893
+    second: Gemini_Generated_Image_dkkpi6dkkpi6dkkp__1_-removebg-preview_7
+  - first:
+      213: 2695352352546036306
+    second: Gemini_Generated_Image_dkkpi6dkkpi6dkkp__1_-removebg-preview_8
+  - first:
+      213: -3091499697706688463
+    second: Gemini_Generated_Image_dkkpi6dkkpi6dkkp__1_-removebg-preview_9
+  - first:
+      213: -3556800621097642066
+    second: Gemini_Generated_Image_dkkpi6dkkpi6dkkp__1_-removebg-preview_10
+  - first:
+      213: -9116741255798325240
+    second: Gemini_Generated_Image_dkkpi6dkkpi6dkkp__1_-removebg-preview_11
+  - first:
+      213: 5869354065964265129
+    second: Gemini_Generated_Image_dkkpi6dkkpi6dkkp__1_-removebg-preview_12
+  - first:
+      213: -8030904483743352844
+    second: Gemini_Generated_Image_dkkpi6dkkpi6dkkp__1_-removebg-preview_13
+  - first:
+      213: -8513691480150520281
+    second: Gemini_Generated_Image_dkkpi6dkkpi6dkkp__1_-removebg-preview_14
+  - first:
+      213: -2176044581998920109
+    second: Gemini_Generated_Image_dkkpi6dkkpi6dkkp__1_-removebg-preview_15
+  - first:
+      213: 7042889700135073296
+    second: Gemini_Generated_Image_dkkpi6dkkpi6dkkp__1_-removebg-preview_16
+  - first:
+      213: 7951272104662111112
+    second: Gemini_Generated_Image_dkkpi6dkkpi6dkkp__1_-removebg-preview_17
+  - first:
+      213: -3514510122762843075
+    second: Gemini_Generated_Image_dkkpi6dkkpi6dkkp__1_-removebg-preview_18
+  - first:
+      213: -4184301566154847696
+    second: Gemini_Generated_Image_dkkpi6dkkpi6dkkp__1_-removebg-preview_19
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Barrel_1
+      rect:
+        serializedVersion: 2
+        x: 543
+        y: 252
+        width: 75
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4bef7723aefed814486367fc71a9fd6c
+      internalID: 1160187997
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Barrel_2
+      rect:
+        serializedVersion: 2
+        x: 74
+        y: 252
+        width: 49
+        height: 80
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 38ca42581982b154282fa55762406a84
+      internalID: 1912791722
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Barrel_3
+      rect:
+        serializedVersion: 2
+        x: 234
+        y: 252
+        width: 52
+        height: 80
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 841732393bfecf149b9c8ab7b1c6d74d
+      internalID: 1138118453
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Barrel_4
+      rect:
+        serializedVersion: 2
+        x: 390
+        y: 252
+        width: 56
+        height: 87
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 49394054483591144b02399444e93c47
+      internalID: -1656389536
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Barrel_5
+      rect:
+        serializedVersion: 2
+        x: 544
+        y: 134
+        width: 75
+        height: 113
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ebb061a572d3b1d40bff698d4c8012d4
+      internalID: 944054493
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Barrel_6
+      rect:
+        serializedVersion: 2
+        x: 387
+        y: 133
+        width: 71
+        height: 111
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 91b494a44f398e143a5a963687f7034b
+      internalID: -197705026
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Barrel_12
+      rect:
+        serializedVersion: 2
+        x: 67
+        y: 134
+        width: 61
+        height: 95
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: aa9bf635f15e1014e8d9854b778e051d
+      internalID: -1946636964
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Barrel_13
+      rect:
+        serializedVersion: 2
+        x: 230
+        y: 133
+        width: 60
+        height: 97
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a50ac0b7be445f1499ab7bf98a2451c4
+      internalID: -1453739100
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Barrel_14
+      rect:
+        serializedVersion: 2
+        x: 67
+        y: 14
+        width: 74
+        height: 111
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e12ccce20fca62148b13a2218eb5fa59
+      internalID: 1840033894
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Barrel_16
+      rect:
+        serializedVersion: 2
+        x: 229
+        y: 14
+        width: 61
+        height: 85
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9dcfbb13425ba3c47aa03d3d1448b932
+      internalID: -1773746237
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Barrel_18
+      rect:
+        serializedVersion: 2
+        x: 383
+        y: 14
+        width: 66
+        height: 81
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1ad383851a926f240b8bf0c03aadb6d5
+      internalID: 1200456607
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Barrel_19
+      rect:
+        serializedVersion: 2
+        x: 544
+        y: 14
+        width: 62
+        height: 81
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 954394f1cf5d8af4185e2ec239d78a2f
+      internalID: 771141575
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: b87e1af9124064346bbe3201e040863c
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":64.0,"y":64.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":0,"keepEmptyRects":false,"isAlternate":false}'
+    nameFileIdTable:
+      Barrel_0: 2104604037
+      Barrel_1: 1160187997
+      Barrel_10: -941880605
+      Barrel_11: 454870939
+      Barrel_12: -1946636964
+      Barrel_13: -1453739100
+      Barrel_14: 1840033894
+      Barrel_15: 1133601034
+      Barrel_16: -1773746237
+      Barrel_17: -1852102354
+      Barrel_18: 1200456607
+      Barrel_19: 771141575
+      Barrel_2: 1912791722
+      Barrel_3: 1138118453
+      Barrel_4: -1656389536
+      Barrel_5: 944054493
+      Barrel_6: -197705026
+      Barrel_7: 587612888
+      Barrel_8: 147045186
+      Barrel_9: -149449842
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

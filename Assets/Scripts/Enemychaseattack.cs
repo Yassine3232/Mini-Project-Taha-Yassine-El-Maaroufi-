@@ -15,9 +15,9 @@ public class EnemyChaseAttack : MonoBehaviour
     [Tooltip("Layer du joueur (assigne le layer 'Player' dans l'inspecteur).")]
     public LayerMask playerLayer;
     [Tooltip("Distance horizontale à laquelle l'ennemi arrête de courir et attaque à la place.")]
-    public float attackRange = 1.8f;
+    public float attackRange = 1.0f;
     [Tooltip("Tolérance de hauteur maximale pour autoriser l'attaque.")]
-    public float verticalTolerance = 2.0f;
+    public float verticalTolerance = 1.5f;
 
     [Header("Movement")]
     public float chaseSpeed = 3f;
@@ -144,9 +144,18 @@ public class EnemyChaseAttack : MonoBehaviour
 
         float dx = player.position.x - transform.position.x;
         float dirX = Mathf.Sign(dx);
-        Vector2 position = rb.position;
-        Vector2 targetPos = new Vector2(position.x + dirX * chaseSpeed * Time.fixedDeltaTime, position.y);
-        rb.MovePosition(targetPos);
+
+        // Stop moving forward if already within close attack range so we don't push the player
+        if (Mathf.Abs(dx) > attackRange)
+        {
+            Vector2 position = rb.position;
+            Vector2 targetPos = new Vector2(position.x + dirX * chaseSpeed * Time.fixedDeltaTime, position.y);
+            rb.MovePosition(targetPos);
+        }
+        else
+        {
+            rb.linearVelocity = new Vector2(0f, rb.linearVelocity.y);
+        }
 
         if (Mathf.Abs(dx) > 0.05f)
         {
@@ -156,7 +165,8 @@ public class EnemyChaseAttack : MonoBehaviour
 
     void Attack()
     {
-        rb.linearVelocity = Vector2.zero;
+        // Keep zombie completely still during attack so it doesn't push the player
+        rb.linearVelocity = new Vector2(0f, rb.linearVelocity.y);
         if (player == null) return;
 
         float dx = player.position.x - transform.position.x;
@@ -168,10 +178,10 @@ public class EnemyChaseAttack : MonoBehaviour
         SetAnimBool(isRunningBoolParam, false);
         SetAnimBool(isMovingBoolParam, false);
 
-        // Si l'animation d'attaque en cours n'est pas terminée, attendre
+        // If an attack animation is currently playing, wait
         if (isAttacking) return;
 
-        // Dès que le cooldown est écoulé, lancer une attaque
+        // As soon as cooldown is 0 or less, trigger the next attack
         if (attackTimer <= 0f)
         {
             attackTimer = attackCooldown;
@@ -202,7 +212,7 @@ public class EnemyChaseAttack : MonoBehaviour
             DealDamage();
         }
 
-        float remaining = Mathf.Max(0f, attackDuration - damageDelay);
+        float remaining = Mathf.Max(0.05f, attackDuration - damageDelay);
         yield return new WaitForSeconds(remaining);
         EndAttack();
     }
@@ -214,20 +224,42 @@ public class EnemyChaseAttack : MonoBehaviour
 
         float distX = Mathf.Abs(transform.position.x - player.position.x);
         float distY = Mathf.Abs(transform.position.y - player.position.y);
-        if (distX > attackRange * 1.5f || distY > verticalTolerance * 1.5f) return;
 
-        var damageable = player.GetComponent<IDamageable>();
-        if (damageable != null)
+        // Check distance based on collider if available, or position
+        Collider2D enemyCol = GetComponent<Collider2D>();
+        Collider2D playerCol = player.GetComponent<Collider2D>();
+
+        bool inRange = false;
+        if (enemyCol != null && playerCol != null)
         {
-            damageable.TakeDamage(attackDamage);
+            ColliderDistance2D dist = enemyCol.Distance(playerCol);
+            inRange = dist.distance <= attackRange || dist.isOverlapped;
+        }
+        else
+        {
+            inRange = distX <= (attackRange + 0.5f) && distY <= verticalTolerance;
         }
 
-        Debug.Log(name + " attaque le joueur pour " + attackDamage + " dégâts.");
+        // Only inflict damage if close enough
+        if (inRange)
+        {
+            var damageable = player.GetComponent<IDamageable>();
+            if (damageable != null)
+            {
+                damageable.TakeDamage(attackDamage);
+            }
+            Debug.Log(name + " attaque le joueur pour " + attackDamage + " dégâts.");
+        }
     }
 
     void EndAttack()
     {
         isAttacking = false;
+        if (attackCoroutine != null)
+        {
+            StopCoroutine(attackCoroutine);
+            attackCoroutine = null;
+        }
         if (animator != null && !string.IsNullOrEmpty(isAttackingBoolParam))
         {
             animator.SetBool(isAttackingBoolParam, false);

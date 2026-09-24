@@ -90,14 +90,14 @@ public class GameOverController : MonoBehaviour
         // Blood vignette
         yield return FadeImage(bloodSplash, 0f, 0.55f, 0.35f);
 
-        yield return new WaitForSeconds(0.05f);
+        yield return new WaitForSecondsRealtime(0.05f);
 
         // Title slides down
         if (titleRect    != null) yield return SlideIn(titleRect,    staggerDelay);
         // Subtitle slides down
         if (subtitleRect != null) yield return SlideIn(subtitleRect, staggerDelay * 0.5f);
 
-        yield return new WaitForSeconds(0.1f);
+        yield return new WaitForSecondsRealtime(0.1f);
 
         // Button bounces in
         if (replayBtnRect != null) yield return PopIn(replayBtnRect, 0.35f);
@@ -109,7 +109,7 @@ public class GameOverController : MonoBehaviour
         float t = 0f; Color c = img.color;
         while (t < 1f)
         {
-            t += Time.deltaTime / dur;
+            t += Time.unscaledDeltaTime / dur;
             img.color = new Color(c.r, c.g, c.b, Mathf.Lerp(from, to, Mathf.Clamp01(t)));
             yield return null;
         }
@@ -123,7 +123,7 @@ public class GameOverController : MonoBehaviour
         float t = 0f;
         while (t < 1f)
         {
-            t += Time.deltaTime / dur;
+            t += Time.unscaledDeltaTime / dur;
             rect.anchoredPosition = Vector2.Lerp(start, end, EaseOut(Mathf.Clamp01(t)));
             yield return null;
         }
@@ -135,7 +135,7 @@ public class GameOverController : MonoBehaviour
         float t = 0f;
         while (t < 1f)
         {
-            t += Time.deltaTime / dur;
+            t += Time.unscaledDeltaTime / dur;
             rect.localScale = Vector3.one * EaseOutBack(Mathf.Clamp01(t));
             yield return null;
         }

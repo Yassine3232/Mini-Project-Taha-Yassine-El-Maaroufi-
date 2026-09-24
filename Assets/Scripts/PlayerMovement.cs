@@ -31,6 +31,21 @@ public class SimplePlayerMovement : MonoBehaviour, IDamageable
         anim = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         playerAttack = GetComponent<PlayerAttack>();
+
+        // Update the on-screen Health UI
+        ZombieManager.Instance?.UpdatePlayerHealth(currentHealth, maxHealth);
+
+        // Ignore physical collision with Enemy to prevent the zombie from pushing the player
+        Collider2D playerCol = GetComponent<Collider2D>();
+        var enemies = GameObject.FindGameObjectsWithTag("Enemy");
+        foreach (var enemy in enemies)
+        {
+            Collider2D enemyCol = enemy.GetComponent<Collider2D>();
+            if (playerCol != null && enemyCol != null)
+            {
+                Physics2D.IgnoreCollision(playerCol, enemyCol, true);
+            }
+        }
     }
 
     public void TakeDamage(int amount)
@@ -39,6 +54,9 @@ public class SimplePlayerMovement : MonoBehaviour, IDamageable
 
         currentHealth -= amount;
         currentHealth = Mathf.Max(currentHealth, 0);
+
+        // Update the on-screen Health UI
+        ZombieManager.Instance?.UpdatePlayerHealth(currentHealth, maxHealth);
 
         Debug.Log($"Player took {amount} damage! Health: {currentHealth}/{maxHealth}");
 
@@ -91,13 +109,23 @@ public class SimplePlayerMovement : MonoBehaviour, IDamageable
         if (rb != null) rb.linearVelocity = Vector2.zero;
 
         Debug.Log("Player has been defeated! Loading Game Over screen...");
-        StartCoroutine(LoadGameOverScreen());
+        
+        // Immediately notify GameOverManager if present, and start loading coroutine
+        if (GameOverManager.Instance != null)
+        {
+            GameOverManager.Instance.ShowGameOver();
+        }
+        else
+        {
+            StartCoroutine(LoadGameOverScreen());
+        }
     }
 
     IEnumerator LoadGameOverScreen()
     {
-        // Wait for the death animation to play
-        yield return new WaitForSeconds(1.4f);
+        // Wait for the death animation to play (using real-time so it works even if timeScale is modified)
+        yield return new WaitForSecondsRealtime(1.4f);
+        Time.timeScale = 1f;
         SceneManager.LoadScene("GameOver");
     }
 
@@ -116,6 +144,11 @@ public class SimplePlayerMovement : MonoBehaviour, IDamageable
 
         // Send movement data to the Animator
         if (anim != null) anim.SetFloat("Speed", Mathf.Abs(moveInput));
+
+        // Clamp player position so the edge of the map is blocked
+        Vector3 pos = transform.position;
+        pos.x = Mathf.Clamp(pos.x, -28.5f, 8.5f);
+        transform.position = pos;
 
         // Don't flip the sprite while the attack or hurt animation is playing
         bool isAttacking = playerAttack != null && playerAttack.isAttacking;

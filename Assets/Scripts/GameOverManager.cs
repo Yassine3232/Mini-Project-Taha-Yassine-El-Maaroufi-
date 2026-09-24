@@ -29,7 +29,8 @@ public class GameOverManager : MonoBehaviour
     IEnumerator LoadGameOverScene()
     {
         // Give the death animation a moment to play before cutting away
-        yield return new WaitForSeconds(1.4f);
+        yield return new WaitForSecondsRealtime(1.4f);
+        Time.timeScale = 1f;
         SceneManager.LoadScene("GameOver");
     }
 }

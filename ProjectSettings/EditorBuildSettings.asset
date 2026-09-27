@@ -6,11 +6,14 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/SampleScene.unity
+    path: Assets/Scenes/Verruckt.unity
     guid: 8c9cfa26abfee488c85f1582747f6a02
   - enabled: 1
     path: Assets/Scenes/GameOver.unity
     guid: d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9
+  - enabled: 1
+    path: Assets/Scenes/Shi No Numa.unity
+    guid: 4a7c9e21b3d84f6a92c5e7b0d81f36ac
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0

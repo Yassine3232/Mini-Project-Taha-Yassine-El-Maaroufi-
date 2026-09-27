@@ -1,309 +1,137 @@
-using System.Collections;
 using UnityEngine;
 
-/// <summary>
-/// Détecte le joueur, le poursuit en courant et l'attaque au corps à corps.
-/// Fonctionne en équipe avec EnemyPatrol : désactive la patrouille
-/// pendant la poursuite/attaque, puis la réactive quand le joueur s'éloigne.
-/// </summary>
-[RequireComponent(typeof(Rigidbody2D))]
 public class EnemyChaseAttack : MonoBehaviour
 {
-    [Header("Detection")]
-    [Tooltip("Distance à laquelle l'ennemi détecte le joueur.")]
-    public float detectionRange = 5f;
-    [Tooltip("Layer du joueur (assigne le layer 'Player' dans l'inspecteur).")]
-    public LayerMask playerLayer;
-    [Tooltip("Distance horizontale à laquelle l'ennemi arrête de courir et attaque à la place.")]
-    public float attackRange = 1.0f;
-    [Tooltip("Tolérance de hauteur maximale pour autoriser l'attaque.")]
-    public float verticalTolerance = 1.5f;
+    public float distanceDetection = 5f;
+    public float distanceAttaque = 1.0f;
+    public float vitesseCourse = 3f;
+    public int degatsAttaque = 10;
+    public float tempsEntreAttaques = 1.0f;
+    public bool retournerSprite = true;
+    public bool bloquerDansLeNiveau = true;
+    public float limiteGauche = -28.5f;
+    public float limiteDroite = 8.5f;
 
-    [Header("Movement")]
-    public float chaseSpeed = 3f;
+    private Transform joueur;
+    private SpriteRenderer renduSprite;
+    private Rigidbody2D corpsPhysique;
+    private Animator animateur;
+    private EnemyPatrol patrouille;
+    private float chronoAttaque = 0f;
 
-    [Header("Attack")]
-    [Tooltip("Temps d'attente entre deux attaques (secondes).")]
-    public float attackCooldown = 0.8f;
-    public int attackDamage = 10;
-    [Tooltip("Durée de l'animation d'attaque (secondes). Permet de réinitialiser l'état même sans Animation Event.")]
-    public float attackDuration = 0.4f;
-    [Tooltip("Délai avant l'impact du coup pendant l'animation d'attaque.")]
-    public float damageDelay = 0.2f;
-    [Tooltip("Nom du trigger d'animation pour l'attaque.")]
-    public string attackAnimTrigger = "Attack";
-    [Tooltip("Nom du paramètre Bool dans l'Animator qui indique qu'une attaque est en cours.")]
-    public string isAttackingBoolParam = "IsAttacking";
-
-    [Header("Animation Parameters")]
-    [Tooltip("Nom du paramètre Bool pour la course.")]
-    public string isRunningBoolParam = "IsRunning";
-    [Tooltip("Nom du paramètre Bool pour le mouvement (marche / patrouille).")]
-    public string isMovingBoolParam = "IsMoving";
-
-    [Header("Sprite")]
-    public bool flipSpriteOnTurn = true;
-
-    private enum State { Idle, Chase, Attack }
-    private State currentState = State.Idle;
-
-    private Rigidbody2D rb;
-    private SpriteRenderer sr;
-    private Animator animator;
-    private EnemyPatrol patrol; // référence au script de patrouille séparé
-
-    private Transform player;
-    private float attackTimer = 0f;
-    private bool isAttacking = false; // true pendant que l'anim d'attaque joue
-    private bool damageDealtThisAttack = false;
-    private Coroutine attackCoroutine;
-
-    void Awake()
+    void Start()
     {
-        rb = GetComponent<Rigidbody2D>();
-        sr = GetComponent<SpriteRenderer>();
-        animator = GetComponent<Animator>();
-        patrol = GetComponent<EnemyPatrol>(); // optionnel, peut être null si pas de patrouille
-    }
+        renduSprite = GetComponent<SpriteRenderer>();
+        corpsPhysique = GetComponent<Rigidbody2D>();
+        animateur = GetComponent<Animator>();
+        patrouille = GetComponent<EnemyPatrol>();
 
-    void FixedUpdate()
-    {
-        // Décompte continu du timer d'attaque pour être toujours prêt lors de l'engagement
-        if (attackTimer > 0f)
+        GameObject objetJoueur = GameObject.FindGameObjectWithTag("Player");
+        if (objetJoueur != null)
         {
-            attackTimer -= Time.fixedDeltaTime;
-        }
-
-        DetectPlayer();
-
-        switch (currentState)
-        {
-            case State.Idle:
-                // EnemyPatrol (s'il existe) gère le mouvement et ses animations
-                break;
-            case State.Chase:
-                Chase();
-                break;
-            case State.Attack:
-                Attack();
-                break;
+            joueur = objetJoueur.transform;
         }
     }
 
-    void DetectPlayer()
+    void Update()
     {
-        Collider2D hit = Physics2D.OverlapCircle(transform.position, detectionRange, playerLayer);
-        State previousState = currentState;
+        if (joueur == null) return;
 
-        if (hit != null)
+        if (chronoAttaque > 0f)
         {
-            player = hit.transform;
-            float distX = Mathf.Abs(transform.position.x - player.position.x);
-            float distY = Mathf.Abs(transform.position.y - player.position.y);
-            bool inAttackReach = distX <= attackRange && distY <= verticalTolerance;
-
-            currentState = inAttackReach ? State.Attack : State.Chase;
-        }
-        else
-        {
-            player = null;
-            currentState = State.Idle;
-            attackTimer = 0f;
+            chronoAttaque -= Time.deltaTime;
         }
 
-        // Bascule la patrouille ON/OFF
-        if (patrol != null && patrol.enabled != (currentState == State.Idle))
-        {
-            patrol.enabled = (currentState == State.Idle);
-        }
+        float distanceAvecJoueur = Vector2.Distance(transform.position, joueur.position);
 
-        // Si on quitte la poursuite / attaque pour revenir en Idle, réinitialise les animations
-        if (previousState != currentState && currentState == State.Idle)
+        if (distanceAvecJoueur <= distanceDetection)
         {
-            SetAnimBool(isRunningBoolParam, false);
-            SetAnimBool(isAttackingBoolParam, false);
-            isAttacking = false;
-            if (attackCoroutine != null)
+            if (patrouille != null) patrouille.enabled = false;
+
+            float directionX = (joueur.position.x > transform.position.x) ? 1f : -1f;
+            if (retournerSprite && renduSprite != null)
             {
-                StopCoroutine(attackCoroutine);
-                attackCoroutine = null;
+                renduSprite.flipX = directionX < 0;
+            }
+
+            if (distanceAvecJoueur > distanceAttaque)
+            {
+                if (corpsPhysique != null)
+                {
+                    corpsPhysique.linearVelocity = new Vector2(directionX * vitesseCourse, corpsPhysique.linearVelocity.y);
+                }
+
+                if (animateur != null && animateur.runtimeAnimatorController != null)
+                {
+                    animateur.SetBool("IsRunning", true);
+                    animateur.SetBool("IsMoving", false);
+                    animateur.SetBool("IsAttacking", false);
+                }
+            }
+            else
+            {
+                if (corpsPhysique != null)
+                {
+                    corpsPhysique.linearVelocity = new Vector2(0f, corpsPhysique.linearVelocity.y);
+                }
+
+                if (animateur != null && animateur.runtimeAnimatorController != null)
+                {
+                    animateur.SetBool("IsRunning", false);
+                    animateur.SetBool("IsMoving", false);
+                }
+
+                if (chronoAttaque <= 0f)
+                {
+                    AttaquerJoueur();
+                }
             }
         }
-    }
-
-    void Chase()
-    {
-        if (player == null) return;
-
-        // Pendant une attaque active, ne pas glisser
-        if (isAttacking) return;
-
-        SetAnimBool(isRunningBoolParam, true);
-        SetAnimBool(isMovingBoolParam, true);
-        SetAnimBool(isAttackingBoolParam, false);
-
-        float dx = player.position.x - transform.position.x;
-        float dirX = Mathf.Sign(dx);
-
-        // Stop moving forward if already within close attack range so we don't push the player
-        if (Mathf.Abs(dx) > attackRange)
-        {
-            Vector2 position = rb.position;
-            Vector2 targetPos = new Vector2(position.x + dirX * chaseSpeed * Time.fixedDeltaTime, position.y);
-            rb.MovePosition(targetPos);
-        }
         else
         {
-            rb.linearVelocity = new Vector2(0f, rb.linearVelocity.y);
-        }
-
-        if (Mathf.Abs(dx) > 0.05f)
-        {
-            FaceDirection(new Vector2(dirX, 0));
-        }
-    }
-
-    void Attack()
-    {
-        // Keep zombie completely still during attack so it doesn't push the player
-        rb.linearVelocity = new Vector2(0f, rb.linearVelocity.y);
-        if (player == null) return;
-
-        float dx = player.position.x - transform.position.x;
-        if (Mathf.Abs(dx) > 0.05f)
-        {
-            FaceDirection(new Vector2(dx, 0));
-        }
-
-        SetAnimBool(isRunningBoolParam, false);
-        SetAnimBool(isMovingBoolParam, false);
-
-        // If an attack animation is currently playing, wait
-        if (isAttacking) return;
-
-        // As soon as cooldown is 0 or less, trigger the next attack
-        if (attackTimer <= 0f)
-        {
-            attackTimer = attackCooldown;
-            DoAttack();
-        }
-    }
-
-    void DoAttack()
-    {
-        isAttacking = true;
-        damageDealtThisAttack = false;
-
-        if (animator != null)
-        {
-            if (!string.IsNullOrEmpty(attackAnimTrigger)) animator.SetTrigger(attackAnimTrigger);
-            if (!string.IsNullOrEmpty(isAttackingBoolParam)) animator.SetBool(isAttackingBoolParam, true);
-        }
-
-        if (attackCoroutine != null) StopCoroutine(attackCoroutine);
-        attackCoroutine = StartCoroutine(AttackRoutine());
-    }
-
-    IEnumerator AttackRoutine()
-    {
-        yield return new WaitForSeconds(damageDelay);
-        if (!damageDealtThisAttack)
-        {
-            DealDamage();
-        }
-
-        float remaining = Mathf.Max(0.05f, attackDuration - damageDelay);
-        yield return new WaitForSeconds(remaining);
-        EndAttack();
-    }
-
-    void DealDamage()
-    {
-        damageDealtThisAttack = true;
-        if (player == null) return;
-
-        float distX = Mathf.Abs(transform.position.x - player.position.x);
-        float distY = Mathf.Abs(transform.position.y - player.position.y);
-
-        // Check distance based on collider if available, or position
-        Collider2D enemyCol = GetComponent<Collider2D>();
-        Collider2D playerCol = player.GetComponent<Collider2D>();
-
-        bool inRange = false;
-        if (enemyCol != null && playerCol != null)
-        {
-            ColliderDistance2D dist = enemyCol.Distance(playerCol);
-            inRange = dist.distance <= attackRange || dist.isOverlapped;
-        }
-        else
-        {
-            inRange = distX <= (attackRange + 0.5f) && distY <= verticalTolerance;
-        }
-
-        // Only inflict damage if close enough
-        if (inRange)
-        {
-            var damageable = player.GetComponent<IDamageable>();
-            if (damageable != null)
+            if (patrouille != null && !patrouille.enabled)
             {
-                damageable.TakeDamage(attackDamage);
+                patrouille.enabled = true;
             }
-            Debug.Log(name + " attaque le joueur pour " + attackDamage + " dégâts.");
-        }
-    }
 
-    void EndAttack()
-    {
-        isAttacking = false;
-        if (attackCoroutine != null)
+            if (animateur != null && animateur.runtimeAnimatorController != null)
+            {
+                animateur.SetBool("IsRunning", false);
+                animateur.SetBool("IsMoving", true);
+                animateur.SetBool("IsAttacking", false);
+            }
+        }
+
+        if (bloquerDansLeNiveau)
         {
-            StopCoroutine(attackCoroutine);
-            attackCoroutine = null;
+            float positionXBloquee = Mathf.Clamp(transform.position.x, limiteGauche, limiteDroite);
+            transform.position = new Vector3(positionXBloquee, transform.position.y, transform.position.z);
         }
-        if (animator != null && !string.IsNullOrEmpty(isAttackingBoolParam))
+    }
+
+    void AttaquerJoueur()
+    {
+        chronoAttaque = tempsEntreAttaques;
+
+        if (animateur != null && animateur.runtimeAnimatorController != null)
         {
-            animator.SetBool(isAttackingBoolParam, false);
+            animateur.SetTrigger("Attack");
+            animateur.SetBool("IsAttacking", true);
+            Invoke(nameof(FinAnimationAttaque), 0.4f);
         }
-    }
 
-    /// <summary>
-    /// Support pour Animation Event : sur la frame de fin de l'attaque
-    /// </summary>
-    public void AnimEvent_AttackEnd()
-    {
-        EndAttack();
-    }
-
-    /// <summary>
-    /// Support pour Animation Event : sur la frame d'impact du coup
-    /// </summary>
-    public void AnimEvent_DealDamage()
-    {
-        DealDamage();
-    }
-
-    void SetAnimBool(string paramName, bool value)
-    {
-        if (animator != null && !string.IsNullOrEmpty(paramName))
+        IDamageable cibleJoueur = joueur.GetComponent<IDamageable>();
+        if (cibleJoueur != null)
         {
-            animator.SetBool(paramName, value);
+            cibleJoueur.RecevoirDegats(degatsAttaque);
         }
     }
 
-    void FaceDirection(Vector2 direction)
+    void FinAnimationAttaque()
     {
-        if (flipSpriteOnTurn && sr != null && Mathf.Abs(direction.x) > 0.01f)
+        if (animateur != null && animateur.runtimeAnimatorController != null)
         {
-            sr.flipX = direction.x < 0;
+            animateur.SetBool("IsAttacking", false);
         }
-    }
-
-    void OnDrawGizmosSelected()
-    {
-        Gizmos.color = Color.cyan;
-        Gizmos.DrawWireSphere(transform.position, detectionRange);
-
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireCube(transform.position, new Vector3(attackRange * 2f, verticalTolerance * 2f, 0.1f));
     }
 }

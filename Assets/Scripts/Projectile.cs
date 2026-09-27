@@ -2,28 +2,24 @@ using UnityEngine;
 
 public class Projectile : MonoBehaviour
 {
-    public float lifetime = 0.5f;   // Destroy the bullet after 0.5 second (halves the travel distance)
-    public int damage = 1;        // Each bullet deals 1 damage (3 bullets kill a zombie)
+    public float tempsDeVie = 0.5f;
+    public int degats = 1;
 
     void Start()
     {
-        // Destroy the bullet after a moment so it doesn't stay forever
-        Destroy(gameObject, lifetime);
+        Destroy(gameObject, tempsDeVie);
     }
 
-    void OnTriggerEnter2D(Collider2D hitInfo)
+    void OnTriggerEnter2D(Collider2D collision)
     {
-        // Check if what we hit is an enemy
-        if (hitInfo.CompareTag("Enemy"))
+        if (collision.CompareTag("Enemy"))
         {
-            // Deal damage to the zombie (through the shared IDamageable interface)
-            IDamageable damageable = hitInfo.GetComponent<IDamageable>();
-            if (damageable != null)
+            IDamageable ennemiTouche = collision.GetComponent<IDamageable>();
+            if (ennemiTouche != null)
             {
-                damageable.TakeDamage(damage);
+                ennemiTouche.RecevoirDegats(degats);
             }
 
-            // Destroy the projectile upon impact with an enemy
             Destroy(gameObject);
         }
     }

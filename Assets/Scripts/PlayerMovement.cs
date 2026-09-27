@@ -1,170 +1,116 @@
-using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class SimplePlayerMovement : MonoBehaviour, IDamageable
 {
-    public float moveSpeed = 5f;
-    public bool facingRight = true; // Other scripts (like attacking) can check this
+    public float vitesse = 5f;
+    public bool regardeADroite = true;
+    public int pointsDeVieMax = 100;
+    public int pointsDeVieActuels;
+    public bool bloquerDansLeNiveau = true;
+    public float limiteGauche = -28.5f;
+    public float limiteDroite = 8.5f;
 
-    [Header("Health")]
-    public int maxHealth = 100;
-    public int currentHealth;
-
-    [Header("Hurt Flash Duration")]
-    [Tooltip("How long the Hurt animation plays before returning to Idle (seconds).")]
-    public float hurtDuration = 0.25f;
-
-    private Rigidbody2D rb;
-    private Animator anim;
-    private SpriteRenderer spriteRenderer;
-    private PlayerAttack playerAttack;
-
-    private bool isDead = false;
-    private bool isHurt = false;
-    private Coroutine hurtCoroutine;
+    private Rigidbody2D corpsPhysique;
+    private Animator animateur;
+    private SpriteRenderer renduSprite;
+    private bool estMort = false;
 
     void Start()
     {
-        currentHealth = maxHealth;
-        rb = GetComponent<Rigidbody2D>();
-        anim = GetComponent<Animator>();
-        spriteRenderer = GetComponent<SpriteRenderer>();
-        playerAttack = GetComponent<PlayerAttack>();
+        pointsDeVieActuels = pointsDeVieMax;
+        corpsPhysique = GetComponent<Rigidbody2D>();
+        animateur = GetComponent<Animator>();
+        renduSprite = GetComponent<SpriteRenderer>();
 
-        // Update the on-screen Health UI
-        ZombieManager.Instance?.UpdatePlayerHealth(currentHealth, maxHealth);
-
-        // Ignore physical collision with Enemy to prevent the zombie from pushing the player
-        Collider2D playerCol = GetComponent<Collider2D>();
-        var enemies = GameObject.FindGameObjectsWithTag("Enemy");
-        foreach (var enemy in enemies)
+        if (ZombieManager.Instance != null)
         {
-            Collider2D enemyCol = enemy.GetComponent<Collider2D>();
-            if (playerCol != null && enemyCol != null)
-            {
-                Physics2D.IgnoreCollision(playerCol, enemyCol, true);
-            }
+            ZombieManager.Instance.MettreAJourVieJoueur(pointsDeVieActuels, pointsDeVieMax);
         }
-    }
-
-    public void TakeDamage(int amount)
-    {
-        if (isDead) return;
-
-        currentHealth -= amount;
-        currentHealth = Mathf.Max(currentHealth, 0);
-
-        // Update the on-screen Health UI
-        ZombieManager.Instance?.UpdatePlayerHealth(currentHealth, maxHealth);
-
-        Debug.Log($"Player took {amount} damage! Health: {currentHealth}/{maxHealth}");
-
-        if (currentHealth <= 0)
-        {
-            Die();
-        }
-        else
-        {
-            PlayHurt();
-        }
-    }
-
-    void PlayHurt()
-    {
-        if (anim != null)
-        {
-            // Stop any previous hurt coroutine first
-            if (hurtCoroutine != null) StopCoroutine(hurtCoroutine);
-            hurtCoroutine = StartCoroutine(HurtRoutine());
-        }
-    }
-
-    IEnumerator HurtRoutine()
-    {
-        isHurt = true;
-        anim.SetBool("IsHurt", true);
-        yield return new WaitForSeconds(hurtDuration);
-        isHurt = false;
-        anim.SetBool("IsHurt", false);
-    }
-
-    void Die()
-    {
-        isDead = true;
-        if (hurtCoroutine != null)
-        {
-            StopCoroutine(hurtCoroutine);
-            hurtCoroutine = null;
-        }
-        isHurt = false;
-
-        if (anim != null)
-        {
-            anim.SetBool("IsHurt", false);
-            anim.SetBool("IsDead", true);
-        }
-
-        // Freeze the soldier in place
-        if (rb != null) rb.linearVelocity = Vector2.zero;
-
-        Debug.Log("Player has been defeated! Loading Game Over screen...");
-        
-        // Immediately notify GameOverManager if present, and start loading coroutine
-        if (GameOverManager.Instance != null)
-        {
-            GameOverManager.Instance.ShowGameOver();
-        }
-        else
-        {
-            StartCoroutine(LoadGameOverScreen());
-        }
-    }
-
-    IEnumerator LoadGameOverScreen()
-    {
-        // Wait for the death animation to play (using real-time so it works even if timeScale is modified)
-        yield return new WaitForSecondsRealtime(1.4f);
-        Time.timeScale = 1f;
-        SceneManager.LoadScene("GameOver");
     }
 
     void Update()
     {
-        // Disable all input once dead
-        if (isDead) return;
+        if (estMort) return;
 
-        // Left and Right Movement (A and D keys)
-        float moveInput = 0f;
-        if (Input.GetKey(KeyCode.A)) moveInput = -1f;
-        if (Input.GetKey(KeyCode.D)) moveInput = 1f;
+        float deplacementX = 0f;
+        if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow)) deplacementX = -1f;
+        if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)) deplacementX = 1f;
 
-        // Apply movement to the Rigidbody
-        rb.linearVelocity = new Vector2(moveInput * moveSpeed, rb.linearVelocity.y);
+        corpsPhysique.linearVelocity = new Vector2(deplacementX * vitesse, corpsPhysique.linearVelocity.y);
 
-        // Send movement data to the Animator
-        if (anim != null) anim.SetFloat("Speed", Mathf.Abs(moveInput));
-
-        // Clamp player position so the edge of the map is blocked
-        Vector3 pos = transform.position;
-        pos.x = Mathf.Clamp(pos.x, -28.5f, 8.5f);
-        transform.position = pos;
-
-        // Don't flip the sprite while the attack or hurt animation is playing
-        bool isAttacking = playerAttack != null && playerAttack.isAttacking;
-
-        if (!isAttacking && !isHurt && spriteRenderer != null)
+        if (animateur != null)
         {
-            if (moveInput > 0)
-            {
-                spriteRenderer.flipX = false;
-                facingRight = true;
-            }
-            else if (moveInput < 0)
-            {
-                spriteRenderer.flipX = true;
-                facingRight = false;
-            }
+            animateur.SetFloat("Speed", Mathf.Abs(deplacementX));
+        }
+
+        if (deplacementX > 0)
+        {
+            renduSprite.flipX = false;
+            regardeADroite = true;
+        }
+        else if (deplacementX < 0)
+        {
+            renduSprite.flipX = true;
+            regardeADroite = false;
+        }
+
+        if (bloquerDansLeNiveau)
+        {
+            float positionXBloquee = Mathf.Clamp(transform.position.x, limiteGauche, limiteDroite);
+            transform.position = new Vector3(positionXBloquee, transform.position.y, transform.position.z);
+        }
+    }
+
+    public void RecevoirDegats(int montantDegats)
+    {
+        if (estMort) return;
+
+        pointsDeVieActuels -= montantDegats;
+        if (pointsDeVieActuels < 0) pointsDeVieActuels = 0;
+
+        if (ZombieManager.Instance != null)
+        {
+            ZombieManager.Instance.MettreAJourVieJoueur(pointsDeVieActuels, pointsDeVieMax);
+        }
+
+        if (animateur != null)
+        {
+            animateur.SetBool("IsHurt", true);
+            Invoke(nameof(FinDegat), 0.25f);
+        }
+
+        if (pointsDeVieActuels <= 0)
+        {
+            Mourir();
+        }
+    }
+
+    void FinDegat()
+    {
+        if (animateur != null)
+        {
+            animateur.SetBool("IsHurt", false);
+        }
+    }
+
+    void Mourir()
+    {
+        estMort = true;
+        corpsPhysique.linearVelocity = Vector2.zero;
+
+        if (animateur != null)
+        {
+            animateur.SetBool("IsDead", true);
+        }
+
+        if (GameOverManager.Instance != null)
+        {
+            GameOverManager.Instance.AfficherGameOver();
+        }
+        else
+        {
+            SceneManager.LoadScene("GameOver");
         }
     }
 }

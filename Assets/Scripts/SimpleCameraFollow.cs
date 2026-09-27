@@ -2,52 +2,45 @@ using UnityEngine;
 
 public class SimpleCameraFollow : MonoBehaviour
 {
-    public Transform target;          
-    public float smoothSpeed = 5f;    
-    public float zoomSize = 5f;       
-    
-    [Header("Camera Offset")]
-    public Vector3 offset = new Vector3(0f, 2f, 0f); 
+    public Transform cible;
+    public float vitesseSuivi = 5f;
+    public Vector3 decalage = new Vector3(0f, 2f, 0f);
+    public bool bloquerLimites = true;
+    public float limiteGauche = -28.5f;
+    public float limiteDroite = 8.5f;
 
-    private Camera cam;
+    private Camera composantCamera;
 
     void Start()
     {
-        cam = GetComponent<Camera>();
-        cam.orthographicSize = zoomSize;
+        composantCamera = GetComponent<Camera>();
     }
-
-    [Header("Map Boundaries")]
-    [Tooltip("Enable clamping camera position within the map limits.")]
-    public bool clampToBounds = true;
-    public float minX = -28.5f;
-    public float maxX = 8.5f;
 
     void LateUpdate()
     {
-        if (target == null) return;
+        if (cible == null) return;
 
-        Vector3 desiredPosition = target.position + offset;
-        desiredPosition.z = transform.position.z; 
+        Vector3 positionVisee = cible.position + decalage;
+        positionVisee.z = transform.position.z;
 
-        if (clampToBounds && cam != null && cam.orthographic)
+        if (bloquerLimites && composantCamera != null && composantCamera.orthographic)
         {
-            float vertExtent = cam.orthographicSize;
-            float horzExtent = vertExtent * Screen.width / Screen.height;
+            float ratioEcran = (float)Screen.width / Screen.height;
+            float demiLargeurCamera = composantCamera.orthographicSize * ratioEcran;
 
-            float minCamX = minX + horzExtent;
-            float maxCamX = maxX - horzExtent;
+            float minXCamera = limiteGauche + demiLargeurCamera;
+            float maxXCamera = limiteDroite - demiLargeurCamera;
 
-            if (minCamX < maxCamX)
+            if (minXCamera < maxXCamera)
             {
-                desiredPosition.x = Mathf.Clamp(desiredPosition.x, minCamX, maxCamX);
+                positionVisee.x = Mathf.Clamp(positionVisee.x, minXCamera, maxXCamera);
             }
             else
             {
-                desiredPosition.x = (minX + maxX) * 0.5f;
+                positionVisee.x = (limiteGauche + limiteDroite) * 0.5f;
             }
         }
 
-        transform.position = Vector3.Lerp(transform.position, desiredPosition, smoothSpeed * Time.deltaTime);
+        transform.position = Vector3.Lerp(transform.position, positionVisee, vitesseSuivi * Time.deltaTime);
     }
 }
